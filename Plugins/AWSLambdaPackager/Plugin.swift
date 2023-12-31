@@ -188,6 +188,10 @@ struct AWSLambdaPackager: CommandPlugin {
             let symbolicLinkPath = workingDirectory.appending("bootstrap")
             try FileManager.default.copyItem(atPath: artifactPath.string, toPath: relocatedArtifactPath.string)
             try FileManager.default.createSymbolicLink(atPath: symbolicLinkPath.string, withDestinationPath: relocatedArtifactPath.lastComponent)
+            
+            // add resources
+            let resourcesDirectory = workingDirectory.appending("Resources")
+            try FileManager.default.createDirectory(atPath: workingDirectory.string, withIntermediateDirectories: true)
 
             #if os(macOS) || os(Linux)
             let arguments = ["--junk-paths", "--symlinks", zipfilePath.string, relocatedArtifactPath.string, symbolicLinkPath.string]
