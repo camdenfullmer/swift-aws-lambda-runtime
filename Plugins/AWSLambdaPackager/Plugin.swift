@@ -194,7 +194,13 @@ struct AWSLambdaPackager: CommandPlugin {
             try FileManager.default.createDirectory(atPath: resourcesDirectory.string, withIntermediateDirectories: true)
 
             #if os(macOS) || os(Linux)
-            let arguments = ["--junk-paths", "--symlinks", zipfilePath.string, relocatedArtifactPath.string, symbolicLinkPath.string]
+            let arguments = [
+                "--symlinks",
+                zipfilePath.string,
+                relocatedArtifactPath.string,
+                symbolicLinkPath.string,
+                resourcesDirectory.string,
+            ]
             #else
             throw Error.unsupportedPlatform("can't or don't know how to create a zip file on this platform")
             #endif
