@@ -203,6 +203,7 @@ struct AWSLambdaPackager: CommandPlugin {
 
             #if os(macOS) || os(Linux)
             let arguments = [
+                "--recurse-paths",
                 "--symlinks",
                 zipfilePath.lastComponent,
                 relocatedArtifactPath.lastComponent,
