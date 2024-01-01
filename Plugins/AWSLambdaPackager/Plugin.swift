@@ -195,7 +195,7 @@ struct AWSLambdaPackager: CommandPlugin {
             let resourcesDirectoryName = try FileManager.default.contentsOfDirectory(atPath: artifactDirectory.string)
                 .first(where: { $0.hasSuffix(".resources") && $0.contains(product.name) })
             if let resourcesDirectoryName {
-                let resourcesDirectory = artifactDirectory.appending(resourcesDirectoryName).appending("Resources")
+                let resourcesDirectory = artifactDirectory.appending(resourcesDirectoryName)
                 try FileManager.default.copyItem(atPath: resourcesDirectory.string, toPath: relocatedResourcesDirectory.string)
             } else {
                 try FileManager.default.createDirectory(atPath: relocatedResourcesDirectory.string, withIntermediateDirectories: true)
