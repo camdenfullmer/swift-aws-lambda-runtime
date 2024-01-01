@@ -196,10 +196,10 @@ struct AWSLambdaPackager: CommandPlugin {
             #if os(macOS) || os(Linux)
             let arguments = [
                 "--symlinks",
-                zipfilePath.string,
-                relocatedArtifactPath.string,
-                symbolicLinkPath.string,
-                resourcesDirectory.string,
+                zipfilePath.lastComponent,
+                relocatedArtifactPath.lastComponent,
+                symbolicLinkPath.lastComponent,
+                resourcesDirectory.lastComponent,
             ]
             #else
             throw Error.unsupportedPlatform("can't or don't know how to create a zip file on this platform")
@@ -209,6 +209,7 @@ struct AWSLambdaPackager: CommandPlugin {
             try self.execute(
                 executable: zipToolPath,
                 arguments: arguments,
+                customWorkingDirectory: workingDirectory,
                 logLevel: verboseLogging ? .debug : .silent
             )
 
