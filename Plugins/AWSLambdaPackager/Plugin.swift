@@ -191,7 +191,7 @@ struct AWSLambdaPackager: CommandPlugin {
             
             // add resources
             let resourcesDirectory = workingDirectory.appending("Resources")
-            try FileManager.default.createDirectory(atPath: workingDirectory.string, withIntermediateDirectories: true)
+            try FileManager.default.createDirectory(atPath: resourcesDirectory.string, withIntermediateDirectories: true)
 
             #if os(macOS) || os(Linux)
             let arguments = ["--junk-paths", "--symlinks", zipfilePath.string, relocatedArtifactPath.string, symbolicLinkPath.string]
