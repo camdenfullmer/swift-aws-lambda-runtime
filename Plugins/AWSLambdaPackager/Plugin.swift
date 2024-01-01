@@ -190,8 +190,15 @@ struct AWSLambdaPackager: CommandPlugin {
             try FileManager.default.createSymbolicLink(atPath: symbolicLinkPath.string, withDestinationPath: relocatedArtifactPath.lastComponent)
             
             // add resources
-            let resourcesDirectory = workingDirectory.appending("Resources")
-            try FileManager.default.createDirectory(atPath: resourcesDirectory.string, withIntermediateDirectories: true)
+            let relocatedResourcesDirectory = workingDirectory.appending("Resources")
+            let artifactDirectory = artifactPath.removingLastComponent()
+            let resourcesDirectory = try FileManager.default.contentsOfDirectory(atPath: artifactDirectory.string)
+                .first(where: { $0.hasSuffix(".resources") && $0.contains(product.name) })
+            if let resourcesDirectory {
+                try FileManager.default.copyItem(atPath: resourcesDirectory, toPath: relocatedResourcesDirectory.string)
+            } else {
+                try FileManager.default.createDirectory(atPath: relocatedResourcesDirectory.string, withIntermediateDirectories: true)
+            }
 
             #if os(macOS) || os(Linux)
             let arguments = [
@@ -199,7 +206,7 @@ struct AWSLambdaPackager: CommandPlugin {
                 zipfilePath.lastComponent,
                 relocatedArtifactPath.lastComponent,
                 symbolicLinkPath.lastComponent,
-                resourcesDirectory.lastComponent,
+                relocatedResourcesDirectory.lastComponent,
             ]
             #else
             throw Error.unsupportedPlatform("can't or don't know how to create a zip file on this platform")
