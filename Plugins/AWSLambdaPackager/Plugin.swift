@@ -208,7 +208,7 @@ struct AWSLambdaPackager: CommandPlugin {
                 zipfilePath.lastComponent,
                 relocatedArtifactPath.lastComponent,
                 symbolicLinkPath.lastComponent,
-                "Contents/Resources",
+                contentsDirectory.lastComponent,
             ]
             #else
             throw Error.unsupportedPlatform("can't or don't know how to create a zip file on this platform")
