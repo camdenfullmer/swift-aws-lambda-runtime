@@ -190,8 +190,9 @@ struct AWSLambdaPackager: CommandPlugin {
             try FileManager.default.createSymbolicLink(atPath: symbolicLinkPath.string, withDestinationPath: relocatedArtifactPath.lastComponent)
             
             // add resources
-            let relocatedResourcesDirectory = workingDirectory.appending("Contents").appending("Resources")
-            try FileManager.default.createDirectory(atPath: relocatedResourcesDirectory.string, withIntermediateDirectories: true)
+            let contentsDirectory = workingDirectory.appending("Contents")
+            try FileManager.default.createDirectory(atPath: contentsDirectory.string, withIntermediateDirectories: true)
+            let relocatedResourcesDirectory = contentsDirectory.appending("Resources")
             let artifactDirectory = artifactPath.removingLastComponent()
             let resourcesDirectoryName = try FileManager.default.contentsOfDirectory(atPath: artifactDirectory.string)
                 .first(where: { $0.hasSuffix(".resources") && $0.contains(product.name) })
