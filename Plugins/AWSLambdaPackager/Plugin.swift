@@ -190,17 +190,13 @@ struct AWSLambdaPackager: CommandPlugin {
             try FileManager.default.createSymbolicLink(atPath: symbolicLinkPath.string, withDestinationPath: relocatedArtifactPath.lastComponent)
             
             // add resources
-            let relocatedResourcesDirectory = workingDirectory.appending("Resources")
+            let relocatedResourcesDirectory = workingDirectory.appending("Contents").appending("Resources")
             let artifactDirectory = artifactPath.removingLastComponent()
             let resourcesDirectoryName = try FileManager.default.contentsOfDirectory(atPath: artifactDirectory.string)
                 .first(where: { $0.hasSuffix(".resources") && $0.contains(product.name) })
-            let contentsDirectory = workingDirectory.appending("Contents").appending("Resources")
-            let supportFilesDirectory = workingDirectory.appending("Support Files").appending("Resources")
             if let resourcesDirectoryName {
                 let resourcesDirectory = artifactDirectory.appending(resourcesDirectoryName)
                 try FileManager.default.copyItem(atPath: resourcesDirectory.string, toPath: relocatedResourcesDirectory.string)
-                try FileManager.default.createDirectory(atPath: contentsDirectory.string, withIntermediateDirectories: true)
-                try FileManager.default.createDirectory(atPath: supportFilesDirectory.string, withIntermediateDirectories: true)
             } else {
                 try FileManager.default.createDirectory(atPath: relocatedResourcesDirectory.string, withIntermediateDirectories: true)
             }
@@ -212,9 +208,7 @@ struct AWSLambdaPackager: CommandPlugin {
                 zipfilePath.lastComponent,
                 relocatedArtifactPath.lastComponent,
                 symbolicLinkPath.lastComponent,
-                relocatedResourcesDirectory.lastComponent,
                 "Contents/Resources",
-                "Support Files/Resources",
             ]
             #else
             throw Error.unsupportedPlatform("can't or don't know how to create a zip file on this platform")
